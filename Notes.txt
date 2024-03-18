@@ -1,0 +1,3 @@
+Rectangle offset: 0.8175
+edge offset for rectangle : 4.5
+corner offset: 4.35

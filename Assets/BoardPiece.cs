@@ -25,7 +25,16 @@ public class BoardPiece : MonoBehaviour
         while (currentPosition != endPosition)
         {
             srtPos = transform.localPosition;
-            endPos = BoardStatic.GetPiecePosition((byte)(currentPosition+1), piece);                                       
+            if (currentPosition + 1 >= 40)
+            {
+                endPos = BoardStatic.GetPiecePosition(0, piece);
+                currentPosition = 0;
+            }
+            else
+            {
+                endPos = BoardStatic.GetPiecePosition((byte)(currentPosition + 1), piece);
+                currentPosition++;
+            }
             time = 0f;
             while (time < 1f)
             {
@@ -34,14 +43,14 @@ public class BoardPiece : MonoBehaviour
                 yield return null;
             }
             transform.localPosition = endPos;
-            currentPosition++;
+            
         }
-        Debug.Log("pog");
+        position = endPosition;
     }
     private void Start()
     {
         piecePlacmentExample();
-        StartCoroutine(JumpToPostion(40));
+        StartCoroutine(JumpToPostion(4));
     }
 
 
