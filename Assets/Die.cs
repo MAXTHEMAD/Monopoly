@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class forceyr : MonoBehaviour
+public class Die : MonoBehaviour
 {
     Vector3 strPos;
     Quaternion strRot;
@@ -11,15 +11,9 @@ public class forceyr : MonoBehaviour
     {
         strPos = transform.position;
         strRot = transform.rotation;
-        launch();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    void launch()
+     public void launch()
     {
         transform.position = strPos;
         transform.rotation = strRot;
@@ -86,11 +80,14 @@ public class forceyr : MonoBehaviour
         }
         printy();
     }
+    void done()
+    {
+        transform.parent.GetComponent<DiceThrow>().diceResult += ReadDice();
+    }
     void printy()
     {
         byte outy = ReadDice();
         Debug.Log(outy);
-        launch();
     }
     void stuck()
     {

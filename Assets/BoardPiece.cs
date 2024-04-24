@@ -1,19 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoardPiece : MonoBehaviour
 {
-    [SerializeField]
-    byte position;
+    public
+    byte position = 0;
     [SerializeField]
     byte piece;
 
-    [SerializeField]
-    List<GameObject> hast;
-    void setPosition(byte newPosition)
+    void Start()
     {
-
+        //position = 0;
+        //SetPosition(position);
+    }
+    void SetPosition(byte newPosition)
+    {
+        transform.localPosition = BoardStatic.GetPiecePosition(newPosition, piece);
+        position = newPosition;
     }
 
     IEnumerator JumpToPostion(byte endPosition)
@@ -21,20 +26,16 @@ public class BoardPiece : MonoBehaviour
         byte currentPosition = position;
         float time;
         Vector3 srtPos;
-        Vector3 endPos;
+        Vector3 endPos = transform.localPosition;
         while (currentPosition != endPosition)
         {
-            srtPos = transform.localPosition;
+            srtPos = endPos;
             if (currentPosition + 1 >= 40)
-            {
-                endPos = BoardStatic.GetPiecePosition(0, piece);
                 currentPosition = 0;
-            }
             else
-            {
-                endPos = BoardStatic.GetPiecePosition((byte)(currentPosition + 1), piece);
                 currentPosition++;
-            }
+
+            endPos = BoardStatic.GetPiecePosition(currentPosition, piece);
             time = 0f;
             while (time < 1f)
             {
@@ -42,36 +43,19 @@ public class BoardPiece : MonoBehaviour
                 time += Time.deltaTime;
                 yield return null;
             }
-            transform.localPosition = endPos;
             
         }
+        transform.localPosition = endPos;
         position = endPosition;
     }
-    private void Start()
+
+    public void AddPosition(byte positon)
     {
-        piecePlacmentExample();
-        StartCoroutine(JumpToPostion(4));
-    }
-
-
-
-    private void piecePlacmentExample()
-    {
-        GameObject clone;
-        for (int i = 0; i < 42; i++)
+        position += positon;
+        if (position > 40)
         {
-            clone = Instantiate(hast[0], transform.parent);
-            clone.transform.localPosition = BoardStatic.GetPiecePosition((byte)i, 0);
-            clone.transform.localScale = Vector3.one * 2.5f;
-            clone = Instantiate(hast[0], transform.parent);
-            clone.transform.localPosition = BoardStatic.GetPiecePosition((byte)i, 1);
-            clone.transform.localScale = Vector3.one * 2.5f;
-            clone = Instantiate(hast[0], transform.parent);
-            clone.transform.localPosition = BoardStatic.GetPiecePosition((byte)i, 2);
-            clone.transform.localScale = Vector3.one * 2.5f;
-            clone = Instantiate(hast[0], transform.parent);
-            clone.transform.localPosition = BoardStatic.GetPiecePosition((byte)i, 3);
-            clone.transform.localScale = Vector3.one * 2.5f;
+            position -= 40;
         }
+        StartCoroutine(JumpToPostion(position));
     }
 }
