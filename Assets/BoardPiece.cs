@@ -7,13 +7,13 @@ public class BoardPiece : MonoBehaviour
 {
     public
     byte position = 0;
+    public bool imprisoned;
     [SerializeField]
     byte piece;
-
+    public byte threeTimer;
     void Start()
     {
-        //position = 0;
-        //SetPosition(position);
+
     }
     void SetPosition(byte newPosition)
     {
@@ -40,22 +40,23 @@ public class BoardPiece : MonoBehaviour
             while (time < 1f)
             {
                 transform.localPosition = Vector3.Lerp(srtPos, endPos, time) + (Vector3.up * (time > 0.5 ? -time + 1 : time));
-                time += Time.deltaTime;
+                time += Time.deltaTime *4;
                 yield return null;
             }
             
         }
         transform.localPosition = endPos;
         position = endPosition;
+        transform.parent.GetComponent<Board>().WhatsOnPos();
     }
 
     public void AddPosition(byte positon)
     {
-        position += positon;
-        if (position > 40)
+        byte pos = (byte)(position + positon);
+        if (pos > 40)
         {
-            position -= 40;
+            pos -= 40;
         }
-        StartCoroutine(JumpToPostion(position));
+        StartCoroutine(JumpToPostion(pos));
     }
 }

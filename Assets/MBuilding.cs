@@ -6,8 +6,8 @@ using UnityEngine;
 public class MBuilding : MProperty
 {
     public colour Suite;
-    private int buildingPrice;
-    private int buildingLevel;
+    public int buildingPrice;
+    public int buildingLevel;
     private int[] rents;
     
     public MBuilding(string name, int value, int morgage, colour colour, int ibuildingPrice, int[] irents)
@@ -30,6 +30,75 @@ public class MBuilding : MProperty
         }
         return rents[buildingLevel];
     }
+
+    /// <summary>
+    /// Will upgrade building level regardless of legality
+    /// </summary>
+    /// <returns></returns>
+    public int Upgrade()
+    {
+        if (morgaged)
+        {
+            morgaged = false;
+            return (int)(Morgage * 1.1f);
+        }
+        buildingLevel++;
+        return buildingPrice;
+    }
+
+    /// <summary>
+    /// Will downgrade building level regardless of legality
+    /// </summary>
+    /// <returns></returns>
+    public int DownGrade()
+    {
+        if (buildingLevel == 0)
+        {
+            morgaged = true;
+            return Morgage;
+        }
+
+        buildingLevel--;
+        return buildingPrice / 2;
+    }
+
+    public bool Upgradeable()
+    {
+        int amountOwend = MPropertys.AllProperteys.Values.Where(x => x.owner == owner && x is MBuilding && ((MBuilding)x).Suite == Suite).Count();
+        MProperty[] buildings = MPropertys.AllProperteys.Values.Where(x => x is MBuilding && ((MBuilding)x).Suite == Suite).ToArray();
+        int amountTotal = buildings.Count();
+        if (amountOwend != amountTotal)
+            return false;
+        foreach (MBuilding b in buildings)
+        {
+            if (b == this)
+                continue;
+            if (b.buildingLevel < buildingLevel)
+                return false;
+        }
+        return true;
+    }
+    public bool DownGradeable()
+    {
+        if(buildingLevel == 0)
+        {
+            return true;
+        }
+        int amountOwend = MPropertys.AllProperteys.Values.Where(x => x.owner == owner && x is MBuilding && ((MBuilding)x).Suite == Suite).Count();
+        MProperty[] buildings = MPropertys.AllProperteys.Values.Where(x => x is MBuilding && ((MBuilding)x).Suite == Suite).ToArray();
+        int amountTotal = buildings.Count();
+        if (amountOwend != amountTotal)
+            return false;
+        foreach (MBuilding b in buildings)
+        {
+            if (b == this)
+                continue;
+            if (b.buildingLevel > buildingLevel)
+                return false;
+        }
+        return true;
+    }
+
 
     public enum colour
     {

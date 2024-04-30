@@ -15,6 +15,7 @@ public class MUtility : MProperty
     {
         int amountOwend = MPropertys.AllProperteys.Values.Where(x => x.owner == owner && x is MUtility).Count();
 
-        return amountOwend == 1 ? GameObject.Find("CardTable").GetComponent<DiceThrow>().diceResult * 5 : GameObject.Find("CardTable").GetComponent<DiceThrow>().diceResult * 10;
+
+        return GameObject.Find("CardTable").GetComponent<DiceThrow>().diceResult * amountOwend == 1 ?  5 : 10;
     }
 }

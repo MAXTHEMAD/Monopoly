@@ -12,7 +12,9 @@ public class MProperty
 
     public int rent { get => Rent(); }
 
-    public int owner = 0;
+    public int owner = -1;
+
+    public bool morgaged;
     public MProperty() { }
     public MProperty(string name, int value, int morgage)
     {
